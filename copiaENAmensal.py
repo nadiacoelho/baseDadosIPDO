@@ -1,5 +1,5 @@
 import pandas as pd
-writer = pd.ExcelWriter('BaseIPDO.xlsx', engine= 'openpyxl') #para usar essa função, é necessário instalar o pacote "xlsxwriter" ou "openpyxl"
+writer = pd.ExcelWriter('BaseIPDOena.xlsx', engine= 'openpyxl') #para usar essa função, é necessário instalar o pacote "xlsxwriter" ou "openpyxl"
 pd.set_option('display.width', 100)
 #determinação de constantes, para melhor legibilidade do código:
 #definições relativas às tabelas em análise para indexação

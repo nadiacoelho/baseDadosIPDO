@@ -1,5 +1,5 @@
 import pandas as pd
-writer = pd.ExcelWriter('BaseIPDO.xlsx', engine= 'openpyxl') #para usar essa função, é necessário instalar o pacote "xlsxwriter" ou "openpyxl"
+writer = pd.ExcelWriter('BaseIPDOcarga.xlsx', engine= 'openpyxl') #para usar essa função, é necessário instalar o pacote "xlsxwriter" ou "openpyxl"
 pd.set_option('display.width', 300)
 indexSubsistema = ['Norte', 'Nordeste', 'Sul', 'Sudeste']
 
