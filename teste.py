@@ -62,18 +62,21 @@ def setFile(d,a,m):
     return(excel, mesPasta, fim)
 
 def ENAdiaria17a():
-    #Inicialização das series:
+    #Inicialização dos dataframes:
     enaNorte = pd.DataFrame()
     enaNordeste = pd.DataFrame()
     enaSul = pd.DataFrame()
     enaSudeste = pd.DataFrame()
 
     for mes in range (1,3):
-        #Descrição do loop diário
+        #Os dados diários são guardados em listas mensais. Ao fim de cada mês, as listas são adicionadas ao Dataframe do subsitema correspondente.
+        #A cada mês as listas são zeradas:
         norte = []
         nordeste = []
         sul = []
         sudeste = []
+
+        # Descrição do loop diário:
         dia = 1
         ultimoDia = False
         while ultimoDia == False:
@@ -89,20 +92,18 @@ def ENAdiaria17a():
             enaSE = float(energiaNaturalAfluente.iloc[linSudesteENA, 3])
             sudeste.append(enaSE)
             dia += 1
-        mes+=1
 
+        # Passagem das listas para os Dataframes:
         auxN = pd.Series(norte, name= "Norte")
         enaNorte = pd.concat([enaNorte,auxN])
-
         auxNE = pd.Series(nordeste, name= "Nordeste")
         enaNordeste = pd.concat([enaNordeste,auxNE])
-
         auxS = pd.Series(sul, name= "Sul")
         enaSul = pd.concat([enaSul,auxS])
-
         auxSE = pd.Series(sudeste, name= "Sudeste")
         enaSudeste = pd.concat([enaSudeste, auxSE])
 
+        # Passagem dos dataframes para planilhas de um arquivo excel:
         enaNorte.to_excel(writer, sheet_name='Norte', index = True, startcol= 1, startrow= 1)
         writer.save()
         enaNordeste.to_excel(writer, sheet_name= 'Nordeste', index= True, startcol = 1, startrow = 1)
@@ -112,4 +113,10 @@ def ENAdiaria17a():
         enaSudeste.to_excel(writer, sheet_name= 'Sudeste', index= True, startcol = 1, startrow = 1)
         writer.save()
 
+        mes += 1
+
 ENAdiaria17a()
+
+#fazer outras funções com o acesso à planilha de interessa adaptado para:
+#   1 - coletar a ENA dos mess seguintes (mai - ago/ set - 2018)
+#   2 - coletar outros dados (EA, carga)
