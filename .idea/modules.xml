@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/baseIPDO.iml" filepath="$PROJECT_DIR$/.idea/baseIPDO.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/missao.iml" filepath="$PROJECT_DIR$/.idea/missao.iml" />
     </modules>
   </component>
