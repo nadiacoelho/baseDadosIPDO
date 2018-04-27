@@ -7,7 +7,6 @@ linNorteENA = 2
 linNordesteENA = 3
 linSulENA = 4
 linSudesteENA = 5
-
 colNorteEAR = 3
 colNordesteEAR = 4
 colSulEAR = 1
@@ -62,31 +61,28 @@ def setFile(d,a,m):
         ultimoDia = 31
         mes = 'DEC'
         mesPasta = 'Dezembro'
-    excel = 'IPDO_' + str(d) + mes + str(a) + '.xlsx'
     fim = (ultimoDia == d)
+    excel = 'IPDO_' + str(d) + mes + str(a) + '.xlsx'
     return(excel, mesPasta, fim)
 
 def ENAdiaria2017():
-    #Inicializar os dataframes:
-    enaNorte = pd.DataFrame()
-    enaNordeste = pd.DataFrame()
-    enaSul = pd.DataFrame()
-    enaSudeste = pd.DataFrame()
+    norte = pd.DataFrame(columns=['Dia', 'ENA'])
+    nordeste = pd.DataFrame(columns=['Dia', 'ENA'])
+    sul = pd.DataFrame(columns=['Dia', 'ENA'])
+    sudeste = pd.DataFrame(columns=['Dia', 'ENA'])
 
-    print(enaNorte)
+    enaN = []
+    enaNE = []
+    enaS = []
+    enaSE = []
+    data = []
+
     for mes in range (1,13):
-        #Os dados diários são guardados em listas mensais. Ao fim de cada mês, as listas são adicionadas ao Dataframe do subsitema correspondente.
-        #A cada mês as listas são zeradas:
-
-        norte = []
-        nordeste = []
-        sul = []
-        sudeste = []
-
         # Descrição do loop diário:
         dia = 1
         ultimoDia = False
         while ultimoDia == False:
+            data.append(str(dia) + "/" + str(mes) + "/2017")
             (excel, mesPasta, ultimoDia) = setFile(dia, 2017, mes)
             print(excel)
             if (mes in range(1, 5) and dia in range(1, 32)):
@@ -96,64 +92,46 @@ def ENAdiaria2017():
             if mes in range(10,13):
                 energiaNaturalAfluente = pd.read_excel(excel, "21-Energia Natural Afluente")
 
-            enaN = float(energiaNaturalAfluente.iloc[linNorteENA, 3])
-            norte.append(enaN)
-            enaNE = float(energiaNaturalAfluente.iloc[linNordesteENA, 3])
-            nordeste.append(enaNE)
-            enaS = float(energiaNaturalAfluente.iloc[linSulENA, 3])
-            sul.append(enaS)
-            enaSE = float(energiaNaturalAfluente.iloc[linSudesteENA, 3])
-            sudeste.append(enaSE)
+            enaN.append(float(energiaNaturalAfluente.iloc[linNorteENA, 3]))
+            enaNE.append(float(energiaNaturalAfluente.iloc[linNordesteENA, 3]))
+            enaS.append(float(energiaNaturalAfluente.iloc[linSulENA, 3]))
+            enaSE.append(float(energiaNaturalAfluente.iloc[linSudesteENA, 3]))
+
             dia += 1
 
-        # Passagem das listas para os Dataframes:
-        auxN = pd.Series(norte, name= "ENA")
-        auxNE = pd.Series(nordeste, name="ENA")
-        auxS = pd.Series(sul, name="ENA")
-        auxSE = pd.Series(sudeste, name="ENA")
-
-        #Tentativa com concat
-        enaNorte = pd.concat([enaNorte,auxN], axis=0)
-        enaNordeste = pd.concat([enaNordeste,auxNE], axis=0)
-        enaSul = pd.concat([enaSul,auxS], axis=0)
-        enaSudeste = pd.concat([enaSudeste, auxSE], axis=0)
-
         mes += 1
+    norte["Dia"] = data
+    norte["ENA"] = enaN
+    norte.set_index("Dia")
+    nordeste["Dia"] = data
+    nordeste["ENA"] = enaNE
+    nordeste.set_index("Dia")
+    sul["Dia"] = data
+    sul["ENA"] = enaS
+    sul.set_index("Dia")
+    sudeste["Dia"] = data
+    sudeste["ENA"] = enaSE
+    sudeste.set_index("Dia")
 
-    enaNorte = pd.Series(enaNorte.iloc[:,0], name="ENA")
-    enaNordeste = pd.Series(enaNordeste.iloc[:,0], name="ENA")
-    enaSul = pd.Series(enaSul.iloc[:,0], name="ENA")
-    enaSudeste = pd.Series(enaSudeste.iloc[:,0], name="ENA")
-
-    # Passagem dos dataframes para planilhas de um arquivo excel:
-    enaNorte.to_excel(writer, sheet_name='Norte', index = True, startcol= 1, startrow= 1)
-    writer.save()
-    enaNordeste.to_excel(writer, sheet_name= 'Nordeste', index= True, startcol = 1, startrow = 1)
-    writer.save()
-    enaSul.to_excel(writer, sheet_name= 'Sul', index= True, startcol = 1, startrow = 1)
-    writer.save()
-    enaSudeste.to_excel(writer, sheet_name= 'Sudeste', index= True, startcol = 1, startrow = 1)
-    writer.save()
+    return(norte, nordeste, sul, sudeste)
 
 def EARdiaria2017():
-    # Inicializar os dataframes:
-    earNorte = pd.DataFrame()
-    earNordeste = pd.DataFrame()
-    earSul = pd.DataFrame()
-    earSudeste = pd.DataFrame()
+    norte = pd.DataFrame(columns=['Dia', 'EAr'])
+    nordeste = pd.DataFrame(columns=['Dia', 'EAr'])
+    sul = pd.DataFrame(columns=['Dia', 'EAr'])
+    sudeste = pd.DataFrame(columns=['Dia', 'EAr'])
 
+    earN = []
+    earNE = []
+    earS = []
+    earSE = []
+    data = []
     for mes in range(1,13):
-    # Os dados diários são guardados em listas mensais. Ao fim de cada mês, as listas são adicionadas ao Dataframe do subsitema correspondente.
-    # A cada mês as listas são zeradas:
-        norte = []
-        nordeste = []
-        sul = []
-        sudeste = []
-
         # Descrição do loop diário:
         dia = 1
         ultimoDia = False
         while ultimoDia == False:
+            data.append(str(dia) + "/" + str(mes) + "/2017")
             (excel, mesPasta, ultimoDia) = setFile(dia, 2017, mes)
             print(excel)
             if (mes in range(1, 5) and dia in range(1, 32)):
@@ -163,48 +141,51 @@ def EARdiaria2017():
             if mes in range(10, 13):
                 energiaArmazenada = pd.read_excel(excel, "20-Variação Energia Armazenada")
 
-            earN = float(energiaArmazenada.iloc[5, colNorteEAR])
-            norte.append(earN)
-            earNE = float(energiaArmazenada.iloc[5, colNordesteEAR])
-            nordeste.append(earNE)
-            earS = float(energiaArmazenada.iloc[5, colSulEAR])
-            sul.append(earS)
-            earSE = float(energiaArmazenada.iloc[5, colSudesteEAR])
-            sudeste.append(earSE)
+            earN.append(float(energiaArmazenada.iloc[5, colNorteEAR]))
+            earNE.append(float(energiaArmazenada.iloc[5, colNordesteEAR]))
+            earS.append(float(energiaArmazenada.iloc[5, colSulEAR]))
+            earSE.append(float(energiaArmazenada.iloc[5, colSudesteEAR]))
+
             dia += 1
 
-    # Passagem das listas para os Dataframes:
-        auxN = pd.Series(norte, name="Energia Armazenada")
-        auxNE = pd.Series(nordeste, name="Energia Armazenada")
-        auxS = pd.Series(sul, name="Energia Armazenada")
-        auxSE = pd.Series(sudeste, name="Energia Armazenada")
-
-    # Tentativa com concat
-        earNorte = pd.concat([earNorte, auxN], axis=0)
-        earNordeste = pd.concat([earNordeste, auxNE], axis=0)
-        earSul = pd.concat([earSul, auxS], axis=0)
-        earSudeste = pd.concat([earSudeste, auxSE], axis=0)
-
         mes += 1
+    norte["Dia"] = data
+    norte["EAr"] = earN
+    norte.set_index("Dia")
+    nordeste["Dia"] = data
+    nordeste["EAr"] = earNE
+    nordeste.set_index("Dia")
+    sul["Dia"] = data
+    sul["EAr"] = earS
+    sul.set_index("Dia")
+    sudeste["Dia"] = data
+    sudeste["EAr"] = earSE
+    sudeste.set_index("Dia")
 
-    earNorte = pd.Series(earNorte.iloc[:, 0], name="Energia Armazenada (%)")
-    earNordeste = pd.Series(earNordeste.iloc[:, 0], name="Energia Armazenada (%)")
-    earSul = pd.Series(earSul.iloc[:, 0], name="Energia Armazenada(%)")
-    earSudeste = pd.Series(earSudeste.iloc[:, 0], name="Energia Armazenada(%)")
+    return(norte, nordeste, sul, sudeste)
 
-     # Passagem dos dataframes para planilhas de um arquivo excel:
-    earNorte.to_excel(writer, sheet_name='Norte', index=True, startcol=3, startrow=1)
-    writer.save()
-    earNordeste.to_excel(writer, sheet_name='Nordeste', index=True, startcol=3, startrow=1)
-    writer.save()
-    earSul.to_excel(writer, sheet_name='Sul', index=True, startcol=3, startrow=2)
-    writer.save()
-    earSudeste.to_excel(writer, sheet_name='Sudeste', index=True, startcol=3, startrow=1)
-    writer.save()
+(enaNorte, enaNordeste, enaSul, enaSudeste) = ENAdiaria2017()
+(earNorte, earNordeste, earSul, earSudeste) = EARdiaria2017()
+enaNorte.set_index("Dia")
+enaNordeste.set_index("Dia")
+enaSul.set_index("Dia")
+enaSudeste.set_index("Dia")
+earNorte.set_index("Dia")
+earNordeste.set_index("Dia")
+earSul.set_index("Dia")
+earSudeste.set_index("Dia")
 
-ENAdiaria2017()
-EARdiaria2017()
+norte = pd.merge(right=enaNorte, left=earNorte, how='left', on=["Dia"])
+nordeste = pd.merge(right = enaNordeste,left = earNordeste, how='left', on=["Dia"] )
+sul = pd.merge(enaSul, earSul, how='left', on=["Dia"])
+sudeste = pd.merge(enaSudeste, earSudeste, how='left', on=["Dia"])
 
-#fazer outras funções com o acesso à planilha de interessa adaptado para:
-#   1 - coletar a ENA dos mess seguintes (mai - ago/ set - 2018) (check)
-#   2 - coletar outros dados (EA, carga)
+
+norte.to_excel(writer, sheet_name='Norte', index = True)
+writer.save()
+nordeste.to_excel(writer, sheet_name= 'Nordeste', index= True)
+writer.save()
+sul.to_excel(writer, sheet_name= 'Sul', index= True)
+writer.save()
+sudeste.to_excel(writer, sheet_name= 'Sudeste', index= True)
+writer.save()
